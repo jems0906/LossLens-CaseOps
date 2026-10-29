@@ -1,0 +1,7 @@
+event_id,event_type,process_step,site_id,occurred_at,quantity,source_ref,reconciliation_id
+EVT-SYN-001,shipment,receiving_handoff,SITE-NORTH,2026-10-19T08:00:00Z,100,DOC-SHIP-001,REC-SYN-001
+EVT-SYN-002,receipt,receiving_handoff,SITE-NORTH,2026-10-19T09:10:00Z,92,DOC-RECEIPT-001,REC-SYN-001
+EVT-SYN-003,receipt_correction,receiving_handoff,SITE-NORTH,2026-10-20T11:30:00Z,5,DOC-CORRECTION-001,REC-SYN-001
+EVT-SYN-004,damage_adjustment,receiving_handoff,SITE-NORTH,2026-10-19T10:00:00Z,3,DOC-DAMAGE-001,REC-SYN-001
+EVT-SYN-005,shipment,returns_handoff,SITE-WEST,2026-10-21T07:00:00Z,12,DOC-SHIP-002,REC-SYN-002
+EVT-SYN-006,receipt,returns_handoff,SITE-WEST,2026-10-21T08:00:00Z,10,DOC-RECEIPT-002,REC-SYN-002

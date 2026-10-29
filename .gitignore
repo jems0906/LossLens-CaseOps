@@ -1,0 +1,13 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.db
+.pytest_cache/
+node_modules/
+dist/
+coverage/
+docs/excel-proof/*.png
+docs/excel-proof/*.jpg
+docs/excel-proof/*.jpeg

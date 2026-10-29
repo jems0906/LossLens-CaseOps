@@ -1,0 +1,3 @@
+event_id,event_type,process_step,site_id,occurred_at,quantity,source_ref,reconciliation_id
+EVT-SYN-101,transfer_in,transfer_handoff,SITE-SOUTH,2026-10-19T13:00:00Z,6,DOC-TRANSFER-IN-001,REC-SYN-101
+EVT-SYN-102,transfer_out,transfer_handoff,SITE-SOUTH,2026-10-19T14:00:00Z,6,DOC-TRANSFER-OUT-001,REC-SYN-101

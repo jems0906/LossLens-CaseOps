@@ -1,0 +1,3 @@
+event_id,event_type,process_step,site_id,occurred_at,quantity,source_ref,reconciliation_id
+EVT-SYN-201,shipment,returns_handoff,SITE-EAST,2026-10-20T08:00:00Z,4,DOC-RETURN-EXPECTED-001,REC-SYN-201
+EVT-SYN-202,return,returns_handoff,SITE-EAST,2026-10-20T09:00:00Z,4,DOC-RETURN-RECEIPT-001,REC-SYN-201

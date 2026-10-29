@@ -1,0 +1,4 @@
+event_id,event_type,process_step,site_id,occurred_at,quantity,source_ref,reconciliation_id
+EVT-SYN-301,shipment,inventory_adjustment,SITE-CENTRAL,2026-10-21T08:00:00Z,20,DOC-ADJUST-EXPECTED-001,REC-SYN-301
+EVT-SYN-302,receipt,inventory_adjustment,SITE-CENTRAL,2026-10-21T09:00:00Z,18,DOC-ADJUST-RECEIPT-001,REC-SYN-301
+EVT-SYN-303,inventory_adjustment,inventory_adjustment,SITE-CENTRAL,2026-10-21T10:00:00Z,2,DOC-ADJUST-COUNT-001,REC-SYN-301
