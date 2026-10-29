@@ -2,6 +2,8 @@
 
 LossLens CaseOps is a restricted-access practice workspace that turns synthetic shipment, receipt, transfer, return, and adjustment records into documented reconciliation cases. It supports fact verification, alternative explanations, reviewer approval, mitigation tracking, and sanitized leadership reporting. It does not automatically accuse anyone or produce individual theft-risk scores.
 
+This is an independent fictional portfolio project. It is not affiliated with, endorsed by, or representative of Amazon or Amazon operations; no Amazon sites, systems, data, procedures, or incidents are represented. This project does not establish investigative certification, authorization to investigate real people, or hands-on qualifications to maintain installed security equipment.
+
 ## Safety and scope
 
 - Included records are fictional and labeled synthetic. Use role labels only. Never enter real associate names, badge IDs, package IDs, customer addresses, incident details, or internal screenshots.
@@ -33,7 +35,7 @@ Requirements: Python 3.11+ and Node.js 20+.
 
 4. Open `http://localhost:5173`. Use the analyst token to document and submit a case; use reviewer access to approve or close it.
 
-The seed script resets the configured SQLite database and reloads only the two synthetic cases. Do not run it against a database containing records you need to preserve.
+The seed script resets the configured SQLite database and reloads the included synthetic event fixtures, two cases, and linked actions. Do not run it against a database containing records you need to preserve.
 
 ## Included demonstration
 
@@ -51,6 +53,7 @@ The seed script resets the configured SQLite database and reloads only the two s
 - Workflow is draft → review → approved report → closed. Reviewer permission is required for approval and closure.
 - Mitigation actions link a process change, owner, due date, and required verification evidence for completion.
 - Leadership reports show trends, case aging, closure sample/median, recurring process issues, action completion, overdue actions, and sanitized synthetic CSV exports.
+- Leadership discrepancy rates define eligible processed units as expected units entering that process step, grouped by the same fictional site, process, and ISO week. The sanitized case CSV excludes free-text owner fields.
 
 ## Excel practice
 
@@ -59,6 +62,10 @@ Follow [`docs/excel_reporting_exercises.md`](docs/excel_reporting_exercises.md) 
 ## API
 
 The interactive API reference is available at `http://localhost:8000/docs`. Main routes include `/api/imports/events`, `/api/cases`, `/api/cases/{case_id}/evidence`, `/api/cases/{case_id}/timeline`, `/api/cases/{case_id}/interview-guide`, `/api/cases/{case_id}/reviews/submit`, `/api/cases/{case_id}/reviews/approve`, `/api/cases/{case_id}/reviews/close`, `/api/reports/leadership`, and `/api/reports/{cases,events}.csv`.
+
+## Containers
+
+Build the backend from the repository root so its image includes synthetic fixtures: `docker build -f backend/Dockerfile -t losslens-caseops-backend .`. Run it with separate `CASEOPS_ANALYST_TOKEN` and `CASEOPS_REVIEWER_TOKEN` values. Build the frontend with `docker build -t losslens-caseops-frontend frontend --build-arg VITE_API_ROOT=http://localhost:8000/api`.
 
 ## Checks
 

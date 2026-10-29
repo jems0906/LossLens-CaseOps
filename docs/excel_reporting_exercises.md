@@ -1,12 +1,15 @@
 # Excel Reporting Exercises
 
+Use only the included fictional portfolio data. This project is independent of Amazon operations and does not establish investigative certification, authorization to investigate real people, or security-equipment maintenance qualifications.
+
 Use only `fixtures/synthetic_inventory_events.csv` and `fixtures/synthetic_cases.json`. These exercises are intended to be completed in desktop Excel with synthetic records; a dashboard or CSV export by itself is not Excel proof. Save the finished workbook and screenshots from your own Excel session in `docs/excel-proof/` before presenting the exercise as completed. Do not place real operational screenshots in the repository.
 
 ## 1. Prepare source tables
 
 1. Import the events CSV using **Data → From Text/CSV**. Set `occurred_at` to a timezone-aware timestamp or retain the ISO 8601 text alongside a normalized UTC datetime column. Name the table `Events`.
-2. Load the case JSON with **Data → Get Data → From File → From JSON**, expand the list, and name the table `Cases`.
-3. Keep source fields unchanged. Add cleaning columns rather than overwriting source values.
+2. Load the case JSON with **Data → Get Data → From File → From JSON**, expand the list, and name the table `Cases`. Add `opened_week` from the normalized open timestamp.
+3. Use the `Actions` sheet as the action table. Keep due dates as Excel dates, with process change, owner role, status, and verification evidence.
+4. Keep source fields unchanged. Add cleaning columns rather than overwriting source values.
 
 ## 2. Data cleaning and reconciliation
 
@@ -18,7 +21,7 @@ Use only `fixtures/synthetic_inventory_events.csv` and `fixtures/synthetic_cases
 - Raw mismatch: `=ABS([@expected_units]-[@recorded_units])`.
 - Treat missing values as **unknown**, not zero. Keep the discrepancy rate blank (`=IF([@expected_units]=0,"",[@unexplained_units]/[@expected_units])`) when the denominator is zero or absent.
 
-For `REC-SYN-001`, the first-pass comparison is 100 expected versus 92 recorded: an eight-unit recorded mismatch. Then separately display five units tied to the delayed correction and three to documented damage; unexplained units after review are zero. `REC-SYN-002` remains a two-unit unresolved discrepancy. Do not describe either as theft.
+For `REC-SYN-001`, the first-pass comparison is 100 eligible units entering receiving versus 92 recorded: an eight-unit recorded mismatch. Then separately display five units tied to the delayed correction and three to documented damage; unexplained units after review are zero. `REC-SYN-002` remains a two-unit unresolved discrepancy. Do not describe either as theft.
 
 ## 3. PivotTables
 

@@ -4,11 +4,12 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from app.config import ROOT_DIR
 from app.db import connect, initialize_database
 from app.services.audit_events import record_audit, utc_now
 
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = ROOT_DIR
 EVENT_FIXTURES = (
     "synthetic_inventory_events.csv",
     "synthetic_transfer_events.csv",
@@ -72,6 +73,10 @@ def seed() -> None:
         connection.execute(
             "INSERT INTO actions VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             ("ACTION-SYN-001", "CASE-SYN-001", "Require a timestamped two-party handoff count and a linked correction reason before the receiving record is finalized.", "Synthetic receiving process owner", "2026-11-15", "open", None, "2026-10-22T14:00:00+00:00", None),
+        )
+        connection.execute(
+            "INSERT INTO actions VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            ("ACTION-SYN-002", "CASE-SYN-002", "Request the synthetic correction log and handoff documentation before determining an outcome.", "Synthetic inventory analyst", "2026-11-05", "open", None, "2026-10-21T09:10:00+00:00", None),
         )
         record_audit(connection, "seed", "seeded", "demo", "synthetic", {"events": len(events), "cases": len(cases)})
     print("Seeded synthetic cases CASE-SYN-001 and CASE-SYN-002")

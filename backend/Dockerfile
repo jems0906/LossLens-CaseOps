@@ -1,11 +1,12 @@
 FROM python:3.13-slim
 WORKDIR /app
-COPY requirements.txt ./requirements.txt
+COPY backend/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-COPY app ./app
-COPY alembic ./alembic
-COPY alembic.ini ./alembic.ini
-COPY scripts ./scripts
+COPY backend/app ./app
+COPY backend/alembic ./alembic
+COPY backend/alembic.ini ./alembic.ini
+COPY backend/scripts ./scripts
+COPY fixtures ./fixtures
 ENV PYTHONPATH=/app
 ENV CASEOPS_DB_PATH=/app/losslens.db
 EXPOSE 8000

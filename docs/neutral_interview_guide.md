@@ -1,5 +1,7 @@
 # Neutral Interview Guide
 
+This is a fictional practice guide, independent of Amazon operations. It does not authorize real-person investigations or establish investigative certification.
+
 Use role labels and synthetic records in this practice workspace. Identify the purpose of the conversation, explain that the review concerns records and process, and invite corrections. Ask one open question at a time; record answers as reported statements, not established facts.
 
 ## Open prompts

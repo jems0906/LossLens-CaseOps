@@ -45,7 +45,7 @@ function Login({ onLogin, message }) {
         <div className="brand-mark"><Activity size={21} strokeWidth={2.2} /></div>
         <p className="eyebrow">LOSSLENS / CASEOPS</p>
         <h1>Reconcile the record.<br /><em>Keep the conclusion open.</em></h1>
-        <p className="login-copy">A restricted workspace for synthetic inventory discrepancies, evidence notes, and process review.</p>
+        <p className="login-copy">An independent fictional portfolio exercise, not affiliated with or representative of Amazon operations.</p>
         <form onSubmit={(event) => { event.preventDefault(); onLogin(value); }}>
           <label htmlFor="access-token">Workspace access token</label>
           <div className="token-input">
@@ -55,7 +55,7 @@ function Login({ onLogin, message }) {
           {message && <p className="form-error" role="alert">{message}</p>}
           <button className="button button-primary login-submit" type="submit">Open workspace <ChevronRight size={17} /></button>
         </form>
-        <div className="login-foot"><ShieldCheck size={16} /><span>Synthetic records only. No employee surveillance or guilt scoring.</span></div>
+        <div className="login-foot"><ShieldCheck size={16} /><span>Synthetic records only. This does not establish investigative certification, authorization to investigate real people, or hands-on qualifications to maintain installed security equipment.</span></div>
       </section>
       <aside className="login-side">
         <div className="orbit orbit-one" /><div className="orbit orbit-two" />
@@ -299,7 +299,7 @@ function App() {
     return (
       <>
         <button className="back-link" onClick={() => setPage("cases")}><ArrowLeft size={16} /> Case register</button>
-        <div className="case-detail-heading"><div><p className="eyebrow">SIMULATED / {selected.site_id} / {selected.process_step.replaceAll("_", " ")}</p><h1>{selected.case_id}</h1><p className="subhead">{selected.case_type.replaceAll("_", " ")} <span className="separator">/</span> {selected.report_source}</p></div><span className={`status-chip status-${selected.status}`}>{STATUS_LABELS[selected.status]}</span></div>
+        <div className="case-detail-heading"><div><p className="eyebrow">SIMULATED{/(theft|fraud)/i.test(selected.case_type) ? " THEFT/FRAUD SCENARIO /" : " /"} {selected.site_id} / {selected.process_step.replaceAll("_", " ")}</p><h1>{selected.case_id}</h1><p className="subhead">{selected.case_type.replaceAll("_", " ")} <span className="separator">/</span> {selected.report_source}</p></div><span className={`status-chip status-${selected.status}`}>{STATUS_LABELS[selected.status]}</span></div>
         <section className="case-summary-panel">
           <div className="case-summary-copy"><p className="eyebrow">NEUTRAL CONCERN</p><p>{selected.concern}</p><div className="case-meta-line"><span>Owner <b>{selected.owner}</b></span><span>Priority <b>{selected.priority}</b></span><span>Opened <b>{new Date(selected.opened_at).toLocaleDateString()}</b></span></div></div>
           {result && <div className="recon-card"><div className="recon-head"><span>RECONCILIATION</span><span>{result.classification.replaceAll("_", " ")}</span></div><div className="recon-total"><div><strong>{result.expected_units}</strong><span>expected</span></div><b>−</b><div><strong>{result.recorded_units}</strong><span>recorded</span></div><b>=</b><div className="recon-highlight"><strong>{result.raw_discrepancy_units}</strong><span>raw mismatch</span></div></div><div className="recon-explained"><span><i className="recon-dot correct" />Recording correction <b>{result.confirmed_recording_error_units}</b></span><span><i className="recon-dot adjust" />Documented adjustment <b>{result.documented_adjustment_units}</b></span><span><i className="recon-dot unknown" />Unexplained <b>{result.unexplained_units}</b></span></div></div>}
@@ -341,7 +341,7 @@ function App() {
       </section></div>;
   }
 
-  return <div className="app-shell">{renderSidebar()}<main className="main-area">{renderHeader()}<div className="content-area">{error && <div className="alert-bar" role="alert"><CircleAlert size={16} />{error}<button onClick={() => setError("")}><X size={15} /></button></div>}{notice && <div className="notice-bar"><Check size={16} /><span>{notice}</span><button onClick={() => setNotice("")}><X size={15} /></button></div>}{page === "overview" ? renderOverview() : page === "cases" ? renderCases() : renderCase()}</div><footer className="page-footer"><span>LOSSLENS CASEOPS</span><span>SIMULATED CASEWORK · RESTRICTED ACCESS · NOT A FINDING OF MISCONDUCT</span></footer></main>{renderModal()}</div>;
+  return <div className="app-shell">{renderSidebar()}<main className="main-area">{renderHeader()}<div className="content-area">{error && <div className="alert-bar" role="alert"><CircleAlert size={16} />{error}<button onClick={() => setError("")}><X size={15} /></button></div>}{notice && <div className="notice-bar"><Check size={16} /><span>{notice}</span><button onClick={() => setNotice("")}><X size={15} /></button></div>}{page === "overview" ? renderOverview() : page === "cases" ? renderCases() : renderCase()}</div><footer className="page-footer"><span>INDEPENDENT FICTIONAL PROJECT · NOT AMAZON OPERATIONS</span><span>SIMULATED CASEWORK · NO CERTIFICATION OR AUTHORIZATION · NOT A FINDING OF MISCONDUCT</span></footer></main>{renderModal()}</div>;
 }
 
 export default App;

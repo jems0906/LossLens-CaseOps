@@ -1,8 +1,9 @@
 from collections.abc import Iterable
-from typing import Any
+
+from app.models import ReconciliationEvent, ReconciliationResult
 
 
-def calculate_reconciliation(events: Iterable[dict[str, Any]]) -> dict[str, int | str]:
+def calculate_reconciliation(events: Iterable[ReconciliationEvent]) -> ReconciliationResult:
     totals = {
         "expected_units": 0,
         "recorded_units": 0,

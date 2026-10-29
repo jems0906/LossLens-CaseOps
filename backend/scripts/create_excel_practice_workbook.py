@@ -1,6 +1,7 @@
 from pathlib import Path
 import csv
 import json
+from datetime import date
 
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
@@ -78,13 +79,22 @@ def build() -> None:
     cases = json.loads((FIXTURES / "synthetic_cases.json").read_text(encoding="utf-8"))
     case_sheet = workbook.create_sheet("Cases")
     case_fields = ["case_id", "simulated", "case_type", "report_source", "priority", "owner", "status", "site_id", "process_step", "reconciliation_id", "expected_units", "recorded_units", "raw_discrepancy_units", "unexplained_units", "opened_at", "closed_at"]
-    case_sheet.append(case_fields + ["open_age_days", "closed_duration_days"])
+    case_sheet.append(case_fields + ["open_age_days", "closed_duration_days", "opened_week"])
     for row_number, case in enumerate(cases, start=2):
         case_sheet.append([case.get(field) for field in case_fields] + [
             f'=IF(G{row_number}="closed","",TODAY()-DATEVALUE(LEFT(O{row_number},10)))',
             f'=IF(G{row_number}<>"closed","",DATEVALUE(LEFT(P{row_number},10))-DATEVALUE(LEFT(O{row_number},10)))',
+            f'=TEXT(DATEVALUE(LEFT(O{row_number},10))-WEEKDAY(DATEVALUE(LEFT(O{row_number},10)),2)+1,"yyyy-mm-dd")',
         ])
     style_sheet(case_sheet, "Cases")
+
+    actions = workbook.create_sheet("Actions")
+    actions.append(["action_id", "case_id", "process_change", "owner", "due_date", "status", "verification_evidence"])
+    actions.append(["ACTION-SYN-001", "CASE-SYN-001", "Add a timestamped two-party handoff count and linked correction reason.", "Synthetic receiving process owner", date.fromisoformat("2026-11-15"), "open", ""])
+    actions.append(["ACTION-SYN-002", "CASE-SYN-002", "Request the synthetic correction log and handoff documentation.", "Synthetic inventory analyst", date.fromisoformat("2026-11-05"), "open", ""])
+    style_sheet(actions, "Actions")
+    for cell in actions["E"][1:]:
+        cell.number_format = "yyyy-mm-dd"
 
     reconciliation = workbook.create_sheet("Reconciliation")
     reconciliation.append(["reconciliation_id", "site_id", "process_step", "week_start", "expected_units", "recorded_units", "correction_units", "documented_adjustment_units", "correction_source_ref", "raw_mismatch", "expected_minus_recorded", "unexplained_units", "discrepancy_rate"])
@@ -118,8 +128,9 @@ def build() -> None:
     summary.append(["CASE-SYN-002", "12 expected; 10 recorded; 2 unresolved", "Keep open; request synthetic correction and handoff records"])
     summary.append(["Process control", "Timestamped two-party handoff count and linked correction reason", "Synthetic receiving process owner; due 2026-11-15"])
     summary.append(["Rate definition", "Unexplained units / expected units", "Only compare same site, process, and defined period"])
-    summary.append(["Time to closure", "=MEDIAN(Cases[closed_duration_days])", "Closed-case sample size: =COUNT(Cases[closed_duration_days])"])
-    summary.append(["Action completion", "Use COUNTIFS for verified completed and due actions", "Leave blank if no actions were due; require verification evidence"])
+    summary.append(["Time to closure", '=IF(COUNT(Cases[closed_duration_days])=0,"",MEDIAN(Cases[closed_duration_days]))', "=COUNT(Cases[closed_duration_days])"])
+    summary.append(["Action completion", '=IFERROR(COUNTIFS(Actions[due_date],">="&DATE(YEAR(TODAY()),MONTH(TODAY()),1),Actions[due_date],"<="&TODAY(),Actions[status],"completed",Actions[verification_evidence],"<>")/COUNTIFS(Actions[due_date],">="&DATE(YEAR(TODAY()),MONTH(TODAY()),1),Actions[due_date],"<="&TODAY()),"")', "Month-to-date due actions only; blank when none are due; require verification evidence"])
+    summary.append(["Overdue actions", '=COUNTIFS(Actions[due_date],"<"&TODAY(),Actions[status],"<>completed")', "Open actions with a due date before today"])
     summary.append(["Limitations", "Synthetic records; one closed-case example", "Hashes do not prove authenticity; application audit is not immutable"])
     style_sheet(summary)
     summary.column_dimensions["A"].width = 28

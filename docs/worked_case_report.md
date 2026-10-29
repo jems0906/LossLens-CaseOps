@@ -5,6 +5,8 @@
 **Process:** Receiving handoff  
 **Status:** Closed
 
+This independent fictional portfolio example is not affiliated with, endorsed by, or representative of Amazon or its operations. It does not establish investigative certification, authorization to investigate real people, or hands-on maintenance qualifications for installed security equipment. No Amazon facility, system, data, process, or incident is represented.
+
 ## Question
 
 The expected record contained 100 units; the receipt record contained 92. The initial eight-unit difference is a records discrepancy. It is not eight stolen units and does not, by itself, indicate intent or identify a person.

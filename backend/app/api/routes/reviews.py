@@ -9,6 +9,12 @@ from app.db import get_connection
 from app.schemas import ActionCreate, ActionUpdate, CloseCase
 from app.security.auth import Actor, current_actor, reviewer_actor
 from app.services.audit_events import record_audit, utc_now
+from app.services.case_workflow import (
+    WorkflowTransitionError,
+    approve_case as transition_approve_case,
+    close_case as transition_close_case,
+    submit_case,
+)
 
 
 router = APIRouter(tags=["reviews"])
@@ -20,12 +26,12 @@ def submit_for_review(
     actor: Actor = Depends(current_actor),
     connection: sqlite3.Connection = Depends(get_connection),
 ) -> dict[str, object]:
-    case = get_case(connection, case_id)
-    if case["status"] != "draft":
-        raise HTTPException(status_code=409, detail="Only draft cases can be submitted")
-    connection.execute("UPDATE cases SET status = 'review' WHERE case_id = ?", (case_id,))
+    try:
+        case = submit_case(connection, case_id)
+    except WorkflowTransitionError as error:
+        raise HTTPException(status_code=error.status_code, detail=error.detail) from error
     record_audit(connection, actor.actor_id, "submitted_for_review", "case", case_id)
-    return dict(get_case(connection, case_id))
+    return dict(case)
 
 
 @router.post("/cases/{case_id}/reviews/approve")
@@ -34,14 +40,12 @@ def approve_case(
     actor: Actor = Depends(reviewer_actor),
     connection: sqlite3.Connection = Depends(get_connection),
 ) -> dict[str, object]:
-    case = get_case(connection, case_id)
-    if case["status"] != "review":
-        raise HTTPException(status_code=409, detail="Only cases in review can be approved")
-    if not (case["report_summary"] or "").strip():
-        raise HTTPException(status_code=409, detail="A documented report summary is required before approval")
-    connection.execute("UPDATE cases SET status = 'approved_report' WHERE case_id = ?", (case_id,))
+    try:
+        case = transition_approve_case(connection, case_id)
+    except WorkflowTransitionError as error:
+        raise HTTPException(status_code=error.status_code, detail=error.detail) from error
     record_audit(connection, actor.actor_id, "approved_report", "case", case_id)
-    return dict(get_case(connection, case_id))
+    return dict(case)
 
 
 @router.post("/cases/{case_id}/reviews/close")
@@ -51,15 +55,12 @@ def close_case(
     actor: Actor = Depends(reviewer_actor),
     connection: sqlite3.Connection = Depends(get_connection),
 ) -> dict[str, object]:
-    case = get_case(connection, case_id)
-    if case["status"] != "approved_report":
-        raise HTTPException(status_code=409, detail="A reviewer-approved report is required before closure")
-    connection.execute(
-        "UPDATE cases SET status = 'closed', closed_at = ?, resolution = ? WHERE case_id = ?",
-        (utc_now(), payload.resolution, case_id),
-    )
+    try:
+        case = transition_close_case(connection, case_id, payload.resolution)
+    except WorkflowTransitionError as error:
+        raise HTTPException(status_code=error.status_code, detail=error.detail) from error
     record_audit(connection, actor.actor_id, "closed", "case", case_id)
-    return dict(get_case(connection, case_id))
+    return dict(case)
 
 
 @router.post("/cases/{case_id}/actions", status_code=201)

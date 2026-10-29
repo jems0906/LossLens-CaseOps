@@ -42,7 +42,7 @@ Shipment and transfer-in quantities contribute to expected units. Receipt, trans
 
 ## Reporting definitions
 
-- Discrepancy rate = unexplained units / expected units for the same site, process, and ISO week. The report retains separate reconciliation groups before summing within that bucket.
+- Discrepancy rate = unexplained units / eligible processed units for the same site, process, and ISO week. For these fixtures, eligible processed units are expected units entering that process step. The report retains separate reconciliation groups before summing within that bucket.
 - Open case aging = current UTC time minus opened time; closed-case aging and time-to-closure are reported separately.
 - Time-to-closure includes sample size and median.
 - Action completion = verified completed actions / actions due in the month-to-date reporting period. A zero denominator is reported as blank/null, not zero percent.

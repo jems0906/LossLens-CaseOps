@@ -107,7 +107,20 @@ def test_import_accepts_all_synthetic_event_fixtures_once(tmp_path, monkeypatch)
             files={"file": ("synthetic-events.csv", csv_content, "text/csv")},
         )
         assert duplicate.status_code == 422
-        assert client.get("/api/reports/leadership", headers=ANALYST).status_code == 200
+        leadership = client.get("/api/reports/leadership", headers=ANALYST)
+        assert leadership.status_code == 200
+        north = next(
+            row
+            for row in leadership.json()["discrepancy_trends"]
+            if row["site_id"] == "SITE-NORTH"
+        )
+        assert north["raw_discrepancy_units"] == 8
+        assert north["unexplained_units"] == 0
+        assert north["eligible_processed_units"] == 100
+        case_export = client.get("/api/reports/cases.csv", headers=ANALYST)
+        assert case_export.status_code == 200
+        assert "owner" not in case_export.text.splitlines()[0].lower()
+        assert "Synthetic inventory analyst" not in case_export.text
 
 
 def test_reviewer_permission_required_and_case_must_follow_review_states(tmp_path, monkeypatch) -> None:
@@ -129,6 +142,16 @@ def test_reviewer_permission_required_and_case_must_follow_review_states(tmp_pat
             },
         )
         assert created.status_code == 201
+        reviewer_only_entry = client.post(
+            "/api/cases/CASE-TEST-1/timeline",
+            headers=ANALYST,
+            json={
+                "category": "reviewer_conclusion",
+                "summary": "Synthetic reviewer conclusion",
+                "details": "An analyst must not record a reviewer conclusion.",
+            },
+        )
+        assert reviewer_only_entry.status_code == 403
         invalid_timeline = client.post(
             "/api/cases/CASE-TEST-1/timeline",
             headers=ANALYST,

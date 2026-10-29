@@ -4,7 +4,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 
-ROOT_DIR = Path(__file__).resolve().parents[2]
+APP_DIR = Path(__file__).resolve().parent
+ROOT_DIR = APP_DIR.parent.parent if APP_DIR.parent.name == "backend" else APP_DIR.parent
 load_dotenv(ROOT_DIR / ".env")
 configured_db_path = Path(os.getenv("CASEOPS_DB_PATH", ROOT_DIR / "backend" / "losslens.db"))
 DB_PATH = configured_db_path if configured_db_path.is_absolute() else ROOT_DIR / configured_db_path

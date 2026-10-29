@@ -123,6 +123,8 @@ def add_timeline_entry(
     connection: sqlite3.Connection = Depends(get_connection),
 ) -> dict[str, object]:
     get_case(connection, case_id)
+    if payload.category == "reviewer_conclusion" and actor.role != "reviewer":
+        raise HTTPException(status_code=403, detail="Reviewer permission required for reviewer conclusions")
     event_time = payload.event_time
     if event_time:
         try:

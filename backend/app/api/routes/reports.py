@@ -54,6 +54,7 @@ def leadership_summary(
                 "process_step": process,
                 "week_start": period,
                 "expected_units": expected,
+                "eligible_processed_units": expected,
                 "raw_discrepancy_units": raw,
                 "explained_units": explained,
                 "unexplained_units": unexplained,
@@ -85,7 +86,7 @@ def leadership_summary(
     record_audit(connection, actor.actor_id, "accessed", "leadership_summary", "current")
     return {
         "as_of": now.isoformat(),
-        "period_definition": "ISO week, grouped by fictional site and process; unexplained units / expected units in that group",
+        "period_definition": "ISO week, grouped by fictional site and process; eligible processed units are the expected units entering that process step, and the rate is unexplained units / eligible processed units",
         "discrepancy_trends": trends,
         "case_aging": {
             "open_case_count": len(open_cases),
